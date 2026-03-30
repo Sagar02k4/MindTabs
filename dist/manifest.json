@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "MindTabs",
+  "description": "Remember why you opened tabs. Track, tag, and revisit your browsing with smart reminders.",
+  "version": "1.1.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "MindTabs"
+  },
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "alarms",
+    "notifications",
+    "identity"
+  ],
+  "chrome_url_overrides": {},
+  "options_page": "src/dashboard/index.html"
+}
