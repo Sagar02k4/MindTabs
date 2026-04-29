@@ -59,10 +59,10 @@ const LandingPage = () => {
             <span className="font-bold text-xl tracking-tight text-foreground">MindTabs</span>
           </div>
           <button 
-            onClick={() => window.open('https://chrome.google.com/webstore', '_blank')}
+            onClick={() => window.open('https://github.com/Sagar02k4/MindTabs/releases', '_blank')}
             className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
           >
-            Download Extension
+            Get from GitHub
           </button>
         </div>
       </nav>
@@ -96,13 +96,15 @@ const LandingPage = () => {
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button 
-              onClick={() => window.open('https://chrome.google.com/webstore', '_blank')}
+              onClick={() => window.open('https://github.com/Sagar02k4/MindTabs/releases', '_blank')}
               className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-0.5 cursor-pointer"
             >
               <Download className="w-5 h-5" />
-              Add to Chrome — It's Free
+              Download Source Code
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white text-foreground border border-gray-200 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all cursor-pointer">
+            <button 
+              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-8 py-4 bg-white text-foreground border border-gray-200 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all cursor-pointer">
               View Features
             </button>
           </motion.div>
@@ -116,9 +118,7 @@ const LandingPage = () => {
           className="mt-20 relative max-w-5xl mx-auto"
         >
           <div className="aspect-[16/9] rounded-2xl bg-gradient-to-tr from-gray-100 to-white border border-gray-200 shadow-2xl overflow-hidden relative">
-             <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-gray-400 font-medium">Extension Dashboard Preview</span>
-             </div>
+             <img src="/dashboard-mockup.png" alt="MindTabs Dashboard Preview" className="w-full h-full object-cover" />
           </div>
           
           {/* Decorative blurs */}
@@ -127,7 +127,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Grid */}
-      <section className="py-24 bg-white border-y border-gray-100">
+      <section id="features" className="py-24 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Why use MindTabs?</h2>
@@ -174,10 +174,10 @@ const LandingPage = () => {
         </div>
 
         <button 
-          onClick={() => window.open('https://chrome.google.com/webstore', '_blank')}
+          onClick={() => window.open('https://github.com/Sagar02k4/MindTabs/releases', '_blank')}
           className="px-10 py-5 bg-foreground text-white rounded-full font-bold text-lg inline-flex items-center gap-3 hover:bg-gray-800 transition-colors shadow-xl cursor-pointer"
         >
-          Install MindTabs <ArrowRight className="w-5 h-5" />
+          Download Source Code <ArrowRight className="w-5 h-5" />
         </button>
       </section>
 
