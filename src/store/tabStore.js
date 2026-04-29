@@ -57,6 +57,7 @@ const useTabStore = create((set, get) => ({
       url: tabData.url,
       favicon: tabData.favicon || null,
       tag: null,
+      isArchived: false,
       createdAt: Date.now(),
       lastVisited: Date.now(),
     };
@@ -80,6 +81,16 @@ const useTabStore = create((set, get) => ({
     const { tabs } = get();
     const updated = tabs.map(t => 
       t.id === tabId ? { ...t, tag } : t
+    );
+    set({ tabs: updated });
+    await saveTabs(updated);
+    triggerSync();
+  },
+
+  toggleArchive: async (tabId) => {
+    const { tabs } = get();
+    const updated = tabs.map(t => 
+      t.id === tabId ? { ...t, isArchived: !t.isArchived } : t
     );
     set({ tabs: updated });
     await saveTabs(updated);
@@ -134,6 +145,13 @@ const useTabStore = create((set, get) => ({
     const { tabs, searchQuery, activeTag, sortBy } = get();
     let filtered = [...tabs];
 
+    // Filter by archived status
+    if (activeTag !== 'archived') {
+      filtered = filtered.filter(t => !t.isArchived);
+    } else {
+      filtered = filtered.filter(t => t.isArchived);
+    }
+
     // Filter by search query
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -144,7 +162,7 @@ const useTabStore = create((set, get) => ({
     }
 
     // Filter by tag
-    if (activeTag && activeTag !== 'all') {
+    if (activeTag && activeTag !== 'all' && activeTag !== 'archived') {
       if (activeTag === 'untagged') {
         filtered = filtered.filter(t => !t.tag);
       } else {
@@ -193,8 +211,9 @@ const useTabStore = create((set, get) => ({
     const todayTimestamp = today.getTime();
 
     return {
-      totalTabs: tabs.length,
-      tabsToday: tabs.filter(t => t.createdAt >= todayTimestamp).length,
+      totalTabs: tabs.filter(t => !t.isArchived).length,
+      archivedTabs: tabs.filter(t => t.isArchived).length,
+      tabsToday: tabs.filter(t => t.createdAt >= todayTimestamp && !t.isArchived).length,
       activeReminders: reminders.filter(r => r.status === 'pending').length,
       tagBreakdown: tabs.reduce((acc, t) => {
         const tag = t.tag || 'untagged';

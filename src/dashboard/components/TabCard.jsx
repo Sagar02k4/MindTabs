@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Trash2, Bell, Tag, Clock, MoreVertical, X } from 'lucide-react';
+import { ExternalLink, Trash2, Bell, Tag, Clock, MoreVertical, X, FolderInput, Archive, XCircle } from 'lucide-react';
 import useTabStore from '../../store/tabStore';
 import TagBadge from '../../components/TagBadge';
 import { TAG_OPTIONS, REMINDER_PRESETS } from '../../utils/constants';
@@ -10,7 +10,7 @@ export default function TabCard({ tab, index }) {
   const [showTagPicker, setShowTagPicker] = useState(false);
   const [showReminderPicker, setShowReminderPicker] = useState(false);
   const [customDateTime, setCustomDateTime] = useState('');
-  const { updateTag, removeTab, setReminder, getReminderForTab } = useTabStore();
+  const { updateTag, removeTab, setReminder, getReminderForTab, toggleArchive } = useTabStore();
 
   const reminder = getReminderForTab(tab.id);
 
@@ -19,6 +19,16 @@ export default function TabCard({ tab, index }) {
       chrome.tabs.create({ url: tab.url });
     } else {
       window.open(tab.url, '_blank');
+    }
+  };
+
+  const handleCloseChromeTab = () => {
+    if (typeof chrome !== 'undefined' && chrome.tabs) {
+      chrome.tabs.query({ url: tab.url }, (tabs) => {
+        if (tabs && tabs.length > 0) {
+          tabs.forEach(t => chrome.tabs.remove(t.id));
+        }
+      });
     }
   };
 
@@ -97,11 +107,11 @@ export default function TabCard({ tab, index }) {
         {/* Actions */}
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            onClick={() => { setShowTagPicker(!showTagPicker); setShowReminderPicker(false); }}
-            className="p-2 rounded-lg hover:bg-surface-700/50 text-surface-400 hover:text-primary-400 transition-colors"
-            title="Tag"
+            onClick={() => toggleArchive(tab.id)}
+            className="p-2 rounded-lg hover:bg-surface-700/50 text-surface-400 hover:text-purple-400 transition-colors"
+            title={tab.isArchived ? "Unarchive" : "Archive"}
           >
-            <Tag size={14} />
+            <Archive size={14} />
           </button>
           <button
             onClick={() => { setShowReminderPicker(!showReminderPicker); setShowTagPicker(false); }}
@@ -111,47 +121,21 @@ export default function TabCard({ tab, index }) {
             <Bell size={14} />
           </button>
           <button
-            onClick={handleOpenTab}
-            className="p-2 rounded-lg hover:bg-surface-700/50 text-surface-400 hover:text-cyan-400 transition-colors"
-            title="Open Tab"
+            onClick={handleCloseChromeTab}
+            className="p-2 rounded-lg hover:bg-red-500/20 text-surface-400 hover:text-red-400 transition-colors"
+            title="Close Tab in Browser"
           >
-            <ExternalLink size={14} />
+            <XCircle size={14} />
           </button>
           <button
             onClick={() => removeTab(tab.id)}
             className="p-2 rounded-lg hover:bg-red-500/20 text-surface-400 hover:text-red-400 transition-colors"
-            title="Delete"
+            title="Delete from Dashboard"
           >
             <Trash2 size={14} />
           </button>
         </div>
       </div>
-
-      {/* Tag Picker Dropdown */}
-      {showTagPicker && (
-        <div className="absolute right-4 top-14 z-50 glass rounded-xl p-2 min-w-[160px] 
-                      animate-scale-in shadow-xl shadow-black/40">
-          <div className="flex items-center justify-between px-2 pb-1 mb-1 border-b border-surface-700/50">
-            <span className="text-xs text-surface-400 font-medium">Select Tag</span>
-            <button onClick={() => setShowTagPicker(false)} className="text-surface-500 hover:text-surface-300">
-              <X size={12} />
-            </button>
-          </div>
-          {TAG_OPTIONS.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => handleTagSelect(option.id)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium
-                        transition-colors flex items-center gap-2
-                        ${tab.tag === option.id 
-                          ? 'bg-primary-500/20 text-primary-300' 
-                          : 'hover:bg-surface-700/50 text-surface-300'}`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Reminder Picker Dropdown */}
       {showReminderPicker && (

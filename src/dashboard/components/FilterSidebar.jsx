@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, BookOpen, Briefcase, ShoppingBag, FlaskConical, Tv, AlertTriangle, Tag, ArrowDownAZ, ArrowUpAZ, Clock, SortAsc } from 'lucide-react';
+import { Layers, BookOpen, Briefcase, ShoppingBag, FlaskConical, Tv, AlertTriangle, Tag, ArrowDownAZ, ArrowUpAZ, Clock, SortAsc, Archive } from 'lucide-react';
 import useTabStore from '../../store/tabStore';
 import { TAG_OPTIONS, SORT_OPTIONS } from '../../utils/constants';
 
@@ -78,6 +78,23 @@ export default function FilterSidebar() {
             </span>
             <span className="text-xs text-surface-500">{stats.tagBreakdown['untagged'] || 0}</span>
           </button>
+
+          <div className="pt-2 mt-2 border-t border-surface-700/50">
+            <button
+              onClick={() => setActiveTag('archived')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm
+                        transition-all duration-200
+                        ${activeTag === 'archived' 
+                          ? 'bg-primary-500/20 text-primary-300 font-medium' 
+                          : 'hover:bg-surface-800/50 text-surface-300'}`}
+            >
+              <span className="flex items-center gap-2.5">
+                <Archive size={15} className="text-surface-400" />
+                Archived
+              </span>
+              <span className="text-xs text-surface-500">{stats.archivedTabs || 0}</span>
+            </button>
+          </div>
         </div>
       </div>
 
