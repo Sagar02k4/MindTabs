@@ -228,6 +228,32 @@ const useAuthStore = create((set, get) => ({
     });
   },
 
+  /**
+   * Reset Password for Email
+   */
+  resetPasswordForEmail: async (email) => {
+    if (!isSupabaseConfigured()) {
+      set({ error: 'Supabase is not configured.' });
+      return { error: 'Supabase is not configured.' };
+    }
+
+    set({ loading: true, error: null });
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: chrome.identity.getRedirectURL(),
+      });
+
+      if (error) throw error;
+      
+      set({ loading: false });
+      return { success: true };
+    } catch (err) {
+      set({ loading: false, error: err.message });
+      return { error: err.message };
+    }
+  },
+
   clearError: () => set({ error: null }),
 }));
 

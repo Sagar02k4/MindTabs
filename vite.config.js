@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
+import path from 'path';
 
 // Polyfill File for Node 18 environments
 if (typeof File === 'undefined') {
@@ -18,6 +19,11 @@ export default defineConfig({
     react(),
     crx({ manifest }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     rollupOptions: {
       input: {
